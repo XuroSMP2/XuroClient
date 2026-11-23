@@ -1,0 +1,70 @@
+name: Build XuroClient
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  jar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '21' }
+      - name: Selbsttest
+        run: |
+          mkdir out && javac -d out src/xuro/*.java test/xuro/*.java
+          sudo apt-get install -y xvfb >/dev/null
+          mkdir shots && xvfb-run -a java -cp out xuro.SelfTest shots
+      - name: Jar bauen
+        run: |
+          rm -rf out && mkdir out && javac --release 21 -d out src/xuro/*.java
+          printf 'Main-Class: xuro.Main\n' > manifest.txt
+          jar cfm XuroClient.jar manifest.txt -C out .
+      - uses: actions/upload-artifact@v4
+        with: { name: XuroClient-jar, path: XuroClient.jar }
+
+  app:
+    needs: jar
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: windows-latest, name: Windows, icon: packaging/icon.ico }
+          - { os: macos-latest, name: macOS, icon: packaging/icon.icns }
+          - { os: ubuntu-latest, name: Linux, icon: packaging/icon.png }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '21' }
+      - uses: actions/download-artifact@v4
+        with: { name: XuroClient-jar, path: input }
+      - name: Programm mit eigener Java-Laufzeit bauen
+        shell: bash
+        run: |
+          jpackage --type app-image --name XuroClient --app-version 1.0.0 \
+            --input input --main-jar XuroClient.jar --main-class xuro.Main \
+            --icon "${{ matrix.icon }}" --dest dist \
+            --add-modules java.desktop,java.net.http,java.management,jdk.management,jdk.crypto.ec,java.naming
+      - name: Verpacken
+        shell: bash
+        run: |
+          cd dist
+          if [ "${{ matrix.name }}" = "Windows" ]; then 7z a -tzip ../XuroClient-Windows.zip XuroClient >/dev/null
+          else zip -qry ../XuroClient-${{ matrix.name }}.zip XuroClient; fi
+      - uses: actions/upload-artifact@v4
+        with: { name: 'XuroClient-${{ matrix.name }}', path: 'XuroClient-${{ matrix.name }}.zip' }
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [jar, app]
+    runs-on: ubuntu-latest
+    permissions: { contents: write }
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { path: files, merge-multiple: true }
+      - uses: softprops/action-gh-release@v2
+        with: { files: files/* }
