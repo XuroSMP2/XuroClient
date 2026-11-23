@@ -40,7 +40,7 @@ public final class Config {
     public boolean quickConnect = true;
     public boolean closeOnLaunch = false;
     /** Hier die Azure-Client-ID eintragen (siehe README), dann müssen Spieler nichts eingeben. */
-    public static final String DEFAULT_CLIENT_ID = "";
+    public static final String DEFAULT_CLIENT_ID = "3fc69fe9-c95d-49c0-a315-8b2a500bd4e7";
     public String msClientId = "";
     public final List<Account> accounts = new ArrayList<>();
     public int active = 0;
