@@ -59,7 +59,7 @@ jobs:
         with: { name: 'XuroClient-${{ matrix.name }}', path: 'XuroClient-${{ matrix.name }}.zip' }
 
   release:
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: ${{ !cancelled() && needs.jar.result == 'success' && startsWith(github.ref, 'refs/tags/v') }}
     needs: [jar, app]
     runs-on: ubuntu-latest
     permissions: { contents: write }
