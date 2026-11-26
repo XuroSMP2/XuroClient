@@ -7,7 +7,7 @@ Reines Java, keine Zusatz-Bibliotheken. Die fertigen Programme bringen ihre eige
 ## Was er kann
 - Minecraft + Fabric automatisch installieren und aktuell halten (Dateien werden per Prüfsumme kontrolliert)
 - Passende Java-Version von Mojang laden
-- Mods über Modrinth installieren und abwählen. Standard sind nur erlaubte Mods (FPS, Anzeige, Komfort). Keine X-Ray-, Freecam- oder Fullbright-Mods
+- Modpacks: das eingebaute **XuroSMP-Pack** (Sodium, Lithium, Simple Voice Chat, Low Fire, Low Shield u. a.) oder eigene Packs aus Mods, Ressourcenpaketen und Shadern, per Modrinth-Suche. Jedes Pack hat seinen eigenen Spielordner. Keine X-Ray-, Freecam- oder Fullbright-Mods im Standardpack
 - XuroSMP in der Serverliste, Server-Resource-Pack wird automatisch akzeptiert, optional direkt verbinden
 - Live-Status (Spieler, Version, Ping) direkt per Minecraft-Ping
 - Microsoft-Login (Device-Code) und Offline-Name
@@ -30,7 +30,7 @@ Für den Microsoft-Login braucht jeder Launcher eine eigene App-Registrierung:
 6. Die ID eintragen: bevorzugt in `src/xuro/Config.java` als Standardwert für `msClientId`, damit Spieler nichts eingeben müssen. Alternativ trägt jeder sie unter *Konto* ein oder setzt `XURO_MS_CLIENT_ID`.
 
 ## Online-Konfiguration ohne neuen Build
-Der Launcher lädt beim Start `https://xurosmp.daronlo.com/client/config.json` (Datei liegt in XuroWeb unter `public/client/`). Dort änderst du Servername, IP, Discord, **News** und die **Mod-Liste**, ohne den Launcher neu zu bauen. Fehlt die Datei, nutzt er eingebaute Standardwerte.
+Der Launcher lädt beim Start `https://xurosmp.daronlo.com/client/config.json` (Datei liegt in XuroWeb unter `public/client/`). Dort änderst du Servername, IP, Discord, **News** und die **Modpacks** (`packs` in der config.json), ohne den Launcher neu zu bauen. Fehlt die Datei, nutzt er eingebaute Standardwerte.
 
 ## Bauen
 Jeder Push auf `main` startet den Workflow *Build XuroClient* (Actions-Tab). Er führt den Selbsttest aus und liefert `XuroClient.jar` sowie Zips für Windows, macOS und Linux. Ein Tag wie `v1.0.0` erzeugt zusätzlich ein Release.

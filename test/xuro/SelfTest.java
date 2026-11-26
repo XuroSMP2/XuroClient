@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.List;
 import javax.swing.*;
 
 /** Offline-Selbsttest: JSON, Regeln, Startzeile, servers.dat und Screenshots der Oberfläche. */
@@ -54,27 +55,39 @@ public class SelfTest {
             check(in.readByte() == 8 && in.readUTF().equals("ip") && in.readUTF().equals("xurosmp.daronlo.com"), "nbt ip");
         }
         // Config
-        cfg.accounts.add(acc); cfg.modules.put("sodium", false); cfg.save();
+        Packs.Pack cp = rem.packs.get(0).copy("mein-pack", "Mein Pack"); cp.entries.get(1).on = false; cfg.custom.add(cp); cfg.activePack = "mein-pack";
+        cfg.accounts.add(acc); cfg.modules.put("xurosmp:sodium", false); cfg.save();
         Config c2 = Config.load(tmp);
-        check(c2.ramMb == 3072 && c2.accounts.size() == 1 && c2.modules.get("sodium") == false, "config roundtrip");
+        check(c2.ramMb == 3072 && c2.accounts.size() == 1 && c2.modules.get("xurosmp:sodium") == false, "config roundtrip");
+        check(c2.custom.size() == 1 && c2.custom.get(0).entries.size() == rem.packs.get(0).entries.size() && !c2.custom.get(0).entries.get(1).on && c2.activePack.equals("mein-pack"), "custom pack roundtrip");
+        check(c2.instance().endsWith(Paths.get("instances", "mein-pack")), "instanz pro pack");
+        Packs.Pack std = rem.packs.get(0);
+        check(std.find("simple-voice-chat", "mod") != null && std.find("low-static-fire", "resourcepack") != null && std.find("low-shields", "resourcepack") != null, "xurosmp pack: voice chat, low fire, low shield");
+        List<Packs.Entry> eff = Packs.effective(std, c2);
+        check(eff.stream().anyMatch(e -> e.slug.equals("fabric-api")) && eff.stream().noneMatch(e -> e.slug.equals("sodium")) && eff.stream().noneMatch(e -> e.slug.equals("iris")), "effective: sperre an, sodium aus, iris default aus");
+        check(Packs.validSlug("sodium") && !Packs.validSlug("../x") && !Packs.validId("A b") && Packs.makeId("Mein Pack!", Set.of("mein-pack")).equals("mein-pack-2"), "slug/id");
+        check(Modrinth.searchUrl("voice", "mod", "1.21.4").contains("categories%3Afabric") && Modrinth.parse("{\"hits\":[{\"slug\":\"ok\",\"title\":\"T\"},{\"slug\":\"../bad\"}]}", "mod").size() == 1, "modrinth url/parse");
+        String o1 = Mods.withResourcePack("lang:de_de\nresourcePacks:[\"vanilla\"]\n", "a.zip", true);
+        check(o1.contains("resourcePacks:[\"vanilla\",\"file/a.zip\"]") && o1.contains("lang:de_de"), "options: pack aktivieren");
+        check(Mods.withResourcePack(o1, "a.zip", false).contains("resourcePacks:[\"vanilla\"]") && Mods.withResourcePack("", "b.zip", true).contains("file/b.zip"), "options: pack entfernen/neu");
         check(Installer.mavenPath("org.lwjgl:lwjgl:3.3.3:natives-linux").endsWith("lwjgl/3.3.3/lwjgl-3.3.3-natives-linux.jar"), "maven pfad");
         check(Servers.motd(Json.parse("{\"text\":\"§aHi\",\"extra\":[{\"text\":\" du\"}]}")).equals("Hi du"), "motd");
 
         // Screenshots
         Config uc = new Config(tmp.resolve("ui"));
         Ui ui = new Ui(uc);
-        ui.remote.news.add(new Remote.News("Event am Samstag", "Manhunt mit Preisen. Anmeldung im Discord.", "28.11."));
-        ui.card.st = new Servers.Status(); ui.card.st.online = true; ui.card.st.players = 12; ui.card.st.max = 100; ui.card.st.version = "Paper 1.21.4"; ui.card.st.motd = "XuroSMP - Economy, Clans, Events"; ui.card.st.pingMs = 38;
+        ui.remote.news.clear(); ui.remote.news.add(new Remote.News("XuroSMP - Jetzt live!", "Tritt unserem Netzwerk bei und erlebe ein einzigartiges Minecraft-Erlebnis!", "28.11.2026"));
+        ui.status.st = new Servers.Status(); ui.status.st.online = true;
         String out = a.length > 0 ? a[0] : tmp.toString();
         SwingUtilities.invokeAndWait(() -> {
-            JFrame f = new JFrame("t"); ui.f = f; ui.build(f); f.setSize(1020, 660); f.setVisible(true);
+            JFrame f = new JFrame("t"); ui.f = f; ui.build(f); f.setSize(1280, 760); f.setVisible(true);
             uc.accounts.add(Auth.offline("Marvex123")); ui.refreshAccounts();
         });
         Thread.sleep(600);
-        for (String t : new String[]{"Spielen", "Module", "Konto", "Einstellungen", "Konsole"}) {
+        for (String t : new String[]{"Startseite", "Versionen", "Einstellungen", "Skins", "Mods", "Ressourcenpakete", "XuroSMP", "Konto", "Konsole"}) {
             SwingUtilities.invokeAndWait(() -> ui.tab(t));
             Thread.sleep(250);
-            BufferedImage im = new BufferedImage(1020, 660, BufferedImage.TYPE_INT_RGB);
+            BufferedImage im = new BufferedImage(1280, 760, BufferedImage.TYPE_INT_RGB);
             SwingUtilities.invokeAndWait(() -> { ui.f.getContentPane().paint(im.getGraphics()); });
             javax.imageio.ImageIO.write(im, "png", new File(out, "ui-" + t + ".png"));
         }

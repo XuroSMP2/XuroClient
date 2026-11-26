@@ -44,6 +44,9 @@ public final class Config {
     public String msClientId = "";
     public final List<Account> accounts = new ArrayList<>();
     public int active = 0;
+    public final List<Packs.Pack> custom = new ArrayList<>();
+    public String activePack = "xurosmp";
+    public boolean versionChosen = false;
     public final Map<String, Boolean> modules = new LinkedHashMap<>();
 
     public Config(Path dir) { this.dir = dir; }
@@ -59,7 +62,7 @@ public final class Config {
         return Paths.get(home, ".xuroclient");
     }
 
-    public Path instance() { return dir.resolve("instance"); }
+    public Path instance() { return dir.resolve("instances").resolve(Packs.validId(activePack) ? activePack : "xurosmp"); }
     public Path file() { return dir.resolve("settings.json"); }
 
     public Account account() {
@@ -81,6 +84,9 @@ public final class Config {
                 c.quickConnect = Json.b(m.get("quickConnect"), true);
                 c.closeOnLaunch = Json.b(m.get("closeOnLaunch"), false);
                 c.msClientId = Json.s(m.get("msClientId"), "");
+                c.activePack = Json.s(m.get("activePack"), "xurosmp");
+                c.versionChosen = Json.b(m.get("versionChosen"), false);
+                for (Object o : Json.a(m.get("custom"))) { Packs.Pack p = Packs.packFrom(Json.o(o), false); if (p != null) c.custom.add(p); }
                 c.active = (int) Json.l(m.get("active"), 0);
                 for (Object o : Json.a(m.get("accounts"))) c.accounts.add(Account.from(Json.o(o)));
                 for (Map.Entry<String, Object> e : Json.o(m.get("modules")).entrySet()) c.modules.put(e.getKey(), Json.b(e.getValue(), true));
@@ -107,6 +113,10 @@ public final class Config {
             List<Object> acc = new ArrayList<>();
             for (Account a : accounts) acc.add(a.toMap());
             m.put("accounts", acc);
+            m.put("activePack", activePack); m.put("versionChosen", versionChosen);
+            List<Object> cp = new ArrayList<>();
+            for (Packs.Pack p : custom) cp.add(p.toMap());
+            m.put("custom", cp);
             m.put("modules", new LinkedHashMap<>(modules));
             Path tmp = file().resolveSibling("settings.json.tmp");
             Files.writeString(tmp, Json.write(m), StandardCharsets.UTF_8);
