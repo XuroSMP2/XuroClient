@@ -151,8 +151,8 @@ public final class Ui {
             Hero.drawX(g, 10, 6, 76);
             g.setFont(Widgets.f(44, true).deriveFont(Font.BOLD | Font.ITALIC)); FontMetrics fm = g.getFontMetrics();
             g.setColor(Color.WHITE); g.drawString("Xuro", 98, 52);
-            int w = fm.stringWidth("Xuro"); g.setColor(new Color(0x3fa2ff)); g.drawString("Client", 98 + w, 52);
-            g.setFont(Widgets.f(12, true)); g.setColor(new Color(0xdbe6ff));
+            int w = fm.stringWidth("Xuro"); g.setColor(new Color(0x913FFF)); g.drawString("Client", 98 + w, 52);
+            g.setFont(Widgets.f(12, true)); g.setColor(new Color(0xEDDBFF));
             String t = "P L A Y .   C U S T O M I Z E .   E N J O Y ."; g.drawString(t, 100, 74);
             g.dispose();
         }
@@ -163,8 +163,8 @@ public final class Ui {
         static void drawX(Graphics2D g, float x, float y, float s) {
             Path2D a = new Path2D.Float(); a.moveTo(x, y); a.lineTo(x + s * .34f, y); a.lineTo(x + s * .62f, y + s * .42f); a.lineTo(x + s * .98f, y); a.lineTo(x + s * .58f, y + s * .52f);
             a.lineTo(x + s * .98f, y + s * 1f); a.lineTo(x + s * .66f, y + s * 1f); a.lineTo(x + s * .42f, y + s * .62f); a.lineTo(x + s * .02f, y + s * 1f); a.lineTo(x + s * .36f, y + s * .5f); a.closePath();
-            g.setPaint(new GradientPaint(x, y, new Color(0xffffff), x + s, y + s, new Color(0x2a7dff))); g.fill(a);
-            Widgets.glow(g, a, new Color(0x3bb7ff), 1.4f, 3);
+            g.setPaint(new GradientPaint(x, y, new Color(0xffffff), x + s, y + s, new Color(0x902AFF))); g.fill(a);
+            Widgets.glow(g, a, new Color(0x863BFF), 1.4f, 3);
         }
         @Override protected void paintComponent(Graphics g0) {
             Graphics2D g = (Graphics2D) g0.create(); Widgets.hq(g);
@@ -175,15 +175,15 @@ public final class Ui {
             Font tf = Widgets.f(104, true).deriveFont(Font.BOLD | Font.ITALIC); g.setFont(tf);
             g.setColor(Color.WHITE); g.drawString("Xuro", 190, 150);
             int xw = g.getFontMetrics().stringWidth("Xuro");
-            g.setPaint(new GradientPaint(0, 60, new Color(0x3fa8ff), 0, 150, new Color(0x1560e8))); g.drawString("Client", 190 + xw, 150);
+            g.setPaint(new GradientPaint(0, 60, new Color(0x8F3FFF), 0, 150, new Color(0x7D15E8))); g.drawString("Client", 190 + xw, 150);
             g.setFont(Widgets.f(22, true)); g.setColor(Color.WHITE);
             String t = "P L A Y .   C U S T O M I Z E .   E N J O Y ."; int tw = g.getFontMetrics().stringWidth(t);
             g.drawString(t, 420 - tw / 2f + 40, 192);
-            g.setColor(new Color(0x3bb7ff)); g.fillRect(60, 186, 90, 2); g.fillRect(690, 186, 90, 2);
+            g.setColor(new Color(0x863BFF)); g.fillRect(60, 186, 90, 2); g.fillRect(690, 186, 90, 2);
             drawX(g, 215, 236, 66);
-            g.setFont(Widgets.f(46, true)); g.setColor(new Color(0x3bb7ff)); g.drawString("×", 320, 290);
+            g.setFont(Widgets.f(46, true)); g.setColor(new Color(0x863BFF)); g.drawString("×", 320, 290);
             g.setFont(Widgets.f(58, true).deriveFont(Font.BOLD | Font.ITALIC)); g.setColor(Color.WHITE); g.drawString("Xuro", 395, 285);
-            g.setColor(new Color(0x3fa8ff)); g.drawString("SMP", 395 + g.getFontMetrics().stringWidth("Xuro"), 285);
+            g.setColor(new Color(0x8F3FFF)); g.drawString("SMP", 395 + g.getFontMetrics().stringWidth("Xuro"), 285);
             Path2D crown = new Path2D.Float(); crown.moveTo(450, 232); crown.lineTo(458, 214); crown.lineTo(468, 226); crown.lineTo(480, 208); crown.lineTo(492, 226); crown.lineTo(502, 214); crown.lineTo(510, 232); crown.closePath();
             g.setColor(Widgets.GOLD); g.fill(crown);
             g.setFont(Widgets.f(26, false).deriveFont(Font.ITALIC)); g.setColor(Color.WHITE); g.drawString("Gemeinsam. Stärker.", 330, 332);
@@ -196,7 +196,7 @@ public final class Ui {
         ServerTile() { setPreferredSize(new Dimension(110, 22)); }
         @Override protected void paintComponent(Graphics g0) {
             Graphics2D g = (Graphics2D) g0.create(); Widgets.hq(g);
-            Servers.Status s = st; Color c = s == null ? new Color(0x8892b0) : s.online ? Widgets.OK : Widgets.BAD;
+            Servers.Status s = st; Color c = s == null ? new Color(0x9D88B0) : s.online ? Widgets.OK : Widgets.BAD;
             g.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), 60)); g.fillOval(0, 3, 16, 16);
             g.setColor(c); g.fillOval(3, 6, 10, 10);
             g.setFont(Widgets.f(14, true)); g.setColor(c); g.drawString(s == null ? "Prüfe …" : s.online ? "Online" : "Offline", 22, 17);
@@ -238,10 +238,10 @@ public final class Ui {
             Widgets.text(g, "Direkt beitreten", 66, h / 2 - 4, Widgets.f(14.5f, true), Color.WHITE);
             Servers.Status s = status.st;
             Widgets.text(g, "IP: " + remote.serverHost, 66, h / 2 + 18, Widgets.f(11.5f, false), Widgets.MUTED);
-            g.setColor(s != null && s.online ? Widgets.OK : s == null ? new Color(0x8892b0) : Widgets.BAD); g.fillOval(70 + g.getFontMetrics(Widgets.f(11.5f, false)).stringWidth("IP: " + remote.serverHost) + 6, h / 2 + 9, 9, 9);
+            g.setColor(s != null && s.online ? Widgets.OK : s == null ? new Color(0x9D88B0) : Widgets.BAD); g.fillOval(70 + g.getFontMetrics(Widgets.f(11.5f, false)).stringWidth("IP: " + remote.serverHost) + 6, h / 2 + 9, 9, 9);
             boolean on = cfg.quickConnect;
             RoundRectangle2D t = new RoundRectangle2D.Float(w - 62, h / 2f - 12, 46, 24, 24, 24);
-            g.setColor(on ? new Color(0x1c6df0) : new Color(0x1a2447)); g.fill(t); Widgets.glow(g, t, on ? Widgets.EDGE2 : new Color(0x3a4a80), 1.2f, on ? 2 : 0);
+            g.setColor(on ? new Color(0x821CF0) : new Color(0x331A47)); g.fill(t); Widgets.glow(g, t, on ? Widgets.EDGE2 : new Color(0x603A80), 1.2f, on ? 2 : 0);
             g.setColor(Color.WHITE); g.fill(new Ellipse2D.Float(on ? w - 38 : w - 58, h / 2f - 9, 18, 18));
             g.dispose();
         }
@@ -268,10 +268,10 @@ public final class Ui {
             Config.Account a = cfg.account();
             Shape clip = new Ellipse2D.Float(14, h / 2f - 26, 52, 52); g.setClip(clip);
             if (head != null) g.drawImage(head, 14, h / 2 - 26, 52, 52, null);
-            else { g.setColor(new Color(0xb98563)); g.fillRect(14, h / 2 - 26, 52, 52); g.setColor(new Color(0x4a2f1c)); g.fillRect(14, h / 2 - 26, 52, 16); g.setColor(new Color(0x2a4aa0)); g.fillRect(24, h / 2 - 4, 8, 8); g.fillRect(48, h / 2 - 4, 8, 8); }
+            else { g.setColor(new Color(0xb98563)); g.fillRect(14, h / 2 - 26, 52, 52); g.setColor(new Color(0x4a2f1c)); g.fillRect(14, h / 2 - 26, 52, 16); g.setColor(new Color(0x682AA0)); g.fillRect(24, h / 2 - 4, 8, 8); g.fillRect(48, h / 2 - 4, 8, 8); }
             g.setClip(null); Widgets.glow(g, clip, Widgets.EDGE2, 1.6f, 1);
             Widgets.text(g, a == null ? "Nicht angemeldet" : a.name, 78, h / 2 - 4, Widgets.f(17, true), Color.WHITE);
-            g.setColor(a == null ? new Color(0x8892b0) : Widgets.OK); g.fillOval(78, h / 2 + 8, 10, 10);
+            g.setColor(a == null ? new Color(0x9D88B0) : Widgets.OK); g.fillOval(78, h / 2 + 8, 10, 10);
             Widgets.text(g, a == null ? "Zum Anmelden klicken" : a.type.equals("microsoft") ? "Online" : "Offline-Konto", 94, h / 2 + 18, Widgets.f(13.5f, false), Widgets.MUTED);
             Widgets.text(g, "▾", getWidth() - 30, h / 2 + 6, Widgets.f(16, true), Color.WHITE);
             g.dispose();
@@ -289,7 +289,7 @@ public final class Ui {
         Tile folder = new Tile() {
             @Override protected void paintComponent(Graphics g0) {
                 super.paintComponent(g0); Graphics2D g = (Graphics2D) g0.create(); Widgets.hq(g); int h = getHeight();
-                Widgets.icon(g, "folder", 18, h / 2f - 20, 40, new Color(0xe9f1ff));
+                Widgets.icon(g, "folder", 18, h / 2f - 20, 40, new Color(0xF4E9FF));
                 Widgets.text(g, "Spielordner", 74, h / 2 - 4, Widgets.f(15, false), Color.WHITE);
                 Widgets.text(g, Widgets.clip(g.getFontMetrics(Widgets.f(13.5f, false)), "…/" + cfg.instance().getFileName(), getWidth() - 130), 74, h / 2 + 18, Widgets.f(13.5f, false), Widgets.MUTED);
                 Widgets.text(g, "↗", getWidth() - 36, h / 2 + 7, Widgets.f(20, true), Color.WHITE); g.dispose();
@@ -330,7 +330,7 @@ public final class Ui {
         JComponent c = new JComponent() {
             @Override protected void paintComponent(Graphics g0) {
                 Graphics2D g = (Graphics2D) g0.create(); Widgets.hq(g); int h = getHeight();
-                g.setColor(new Color(0x1c6df0)); g.fillOval(0, h / 2 - 11, 22, 22);
+                g.setColor(new Color(0x821CF0)); g.fillOval(0, h / 2 - 11, 22, 22);
                 g.setColor(Color.WHITE); g.setStroke(new BasicStroke(2.4f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
                 g.draw(new Line2D.Float(6, h / 2f, 10, h / 2f + 4)); g.draw(new Line2D.Float(10, h / 2f + 4, 16, h / 2f - 4));
                 Widgets.text(g, t, 34, h / 2 + 5, Widgets.f(15, false), Color.WHITE); g.dispose();
@@ -584,9 +584,9 @@ public final class Ui {
 
     // ---------------------------------------------------------------- Konsole
     JComponent consolePage() {
-        console.setEditable(false); console.setBackground(new Color(3, 8, 24)); console.setForeground(new Color(0x7fe3ff));
+        console.setEditable(false); console.setBackground(new Color(14, 3, 24)); console.setForeground(new Color(0xA87FFF));
         console.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12)); console.setLineWrap(true); console.setBorder(new EmptyBorder(8, 10, 8, 10));
-        JScrollPane sp = Widgets.scroll(console); sp.setOpaque(true); sp.getViewport().setOpaque(true); sp.getViewport().setBackground(new Color(3, 8, 24));
+        JScrollPane sp = Widgets.scroll(console); sp.setOpaque(true); sp.getViewport().setOpaque(true); sp.getViewport().setBackground(new Color(14, 3, 24));
         Glass g = page("Konsole", "Log von Installation und Spiel", sp);
         JPanel head = (JPanel) ((BorderLayout) g.getLayout()).getLayoutComponent(BorderLayout.NORTH);
         Btn copy = new Btn("Log kopieren", Kind.GHOST, () -> Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(console.getText()), null)).size(13);
